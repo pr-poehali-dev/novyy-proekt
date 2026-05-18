@@ -1,6 +1,106 @@
 import { useState, useRef, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
+// ── Smooth scroll helper ──────────────────────────────
+function scrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ── Progress Bar ──────────────────────────────────────
+function ScrollProgress() {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      setPct((h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 3, zIndex: 100, background: "transparent" }}>
+      <div style={{ height: "100%", width: `${pct}%`, background: "linear-gradient(90deg, var(--pc-accent), var(--pc-accent-light))", transition: "width 0.1s linear", borderRadius: "0 2px 2px 0" }} />
+    </div>
+  );
+}
+
+// ── Demo Modal ────────────────────────────────────────
+function DemoModal({ onClose, title }: { onClose: () => void; title: string }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [phone, setPhone] = useState("");
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !email) return;
+    setLoading(true);
+    setTimeout(() => { setLoading(false); setSent(true); }, 1400);
+  };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}
+      onClick={onClose}>
+      <div style={{ position: "absolute", inset: 0, background: "rgba(5,10,20,0.85)", backdropFilter: "blur(8px)" }} />
+      <div style={{ background: "var(--pc-surface)", border: "1px solid rgba(37,99,235,0.35)", borderRadius: 14, padding: "36px 32px", width: "100%", maxWidth: 480, position: "relative", zIndex: 1, boxShadow: "0 24px 80px rgba(0,0,0,0.5)" }}
+        onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", cursor: "pointer", color: "var(--pc-text-muted)" }}>
+          <Icon name="X" size={20} />
+        </button>
+
+        {sent ? (
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(0,200,100,0.12)", border: "2px solid rgba(0,200,100,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+              <Icon name="CheckCircle" size={30} style={{ color: "#00c864" }} />
+            </div>
+            <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: "var(--pc-text)", marginBottom: 10 }}>Заявка отправлена!</h3>
+            <p style={{ fontSize: 14, color: "var(--pc-text-muted)", lineHeight: 1.7 }}>
+              Мы свяжемся с вами в течение 1 рабочего дня на <strong style={{ color: "var(--pc-text)" }}>{email}</strong>
+            </p>
+            <button className="pc-btn-primary" onClick={onClose} style={{ marginTop: 24, padding: "10px 28px" }}>Закрыть</button>
+          </div>
+        ) : (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 8, background: "rgba(37,99,235,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Icon name="ShieldCheck" size={20} style={{ color: "var(--pc-accent)" }} />
+              </div>
+              <div>
+                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 700, color: "var(--pc-text)" }}>{title}</div>
+                <div style={{ fontSize: 12, color: "var(--pc-text-muted)" }}>Ответим в течение 1 рабочего дня</div>
+              </div>
+            </div>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {[
+                { label: "Ваше имя *", val: name, set: setName, ph: "Иванов Иван Иванович", type: "text" },
+                { label: "Email *", val: email, set: setEmail, ph: "ivan@company.ru", type: "email" },
+                { label: "Компания / ИП", val: company, set: setCompany, ph: "ООО «Ромашка»", type: "text" },
+                { label: "Телефон", val: phone, set: setPhone, ph: "+7 (___) ___-__-__", type: "tel" },
+              ].map(({ label, val, set, ph, type }) => (
+                <div key={label}>
+                  <div style={{ fontSize: 12, color: "var(--pc-text-muted)", marginBottom: 6, fontFamily: "'IBM Plex Mono', monospace" }}>{label}</div>
+                  <input
+                    type={type} value={val} onChange={(e) => set(e.target.value)} placeholder={ph} required={label.includes("*")}
+                    style={{ width: "100%", background: "var(--pc-bg)", border: "1px solid var(--pc-border)", borderRadius: 6, padding: "10px 14px", color: "var(--pc-text)", fontSize: 14, outline: "none", boxSizing: "border-box", fontFamily: "'IBM Plex Sans', sans-serif", transition: "border-color 0.2s" }}
+                    onFocus={(e) => (e.target.style.borderColor = "rgba(37,99,235,0.5)")}
+                    onBlur={(e) => (e.target.style.borderColor = "var(--pc-border)")}
+                  />
+                </div>
+              ))}
+              <button type="submit" className="pc-btn-primary" disabled={loading} style={{ marginTop: 6, padding: "12px 0", opacity: loading ? 0.7 : 1, width: "100%" }}>
+                {loading ? "Отправляю..." : "Отправить заявку"}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Animated Counter ──────────────────────────────────
 function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -42,6 +142,10 @@ function AccordionItem({ q, a }: { q: string; a: string }) {
 
 export default function Index() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [modal, setModal] = useState<string | null>(null);
+
+  const openModal = (title: string) => setModal(title);
+  const closeModal = () => setModal(null);
 
   const services = [
     { icon: "ShieldCheck", label: "Проверка контрагентов", desc: "Автоматическая проверка по национальным и международным базам данных" },
@@ -109,6 +213,8 @@ export default function Index() {
 
   return (
     <div style={{ background: "var(--pc-bg)", color: "var(--pc-text)", minHeight: "100vh", fontFamily: "'IBM Plex Sans', sans-serif" }}>
+      <ScrollProgress />
+      {modal && <DemoModal title={modal} onClose={closeModal} />}
 
       {/* ── NAV ── */}
       <nav style={{ borderBottom: "1px solid var(--pc-border)", background: "rgba(5,10,20,0.96)", backdropFilter: "blur(16px)", position: "fixed", top: 0, left: 0, right: 0, zIndex: 50 }}>
@@ -126,17 +232,17 @@ export default function Index() {
           </div>
 
           <div className="hidden md:flex items-center gap-8">
-            {[["Решения", "#services"], ["Интеграции", "#integrations"], ["Тарифы", "#pricing"], ["О платформе", "#about"]].map(([label, href]) => (
-              <a key={label} href={href} style={{ fontSize: 14, color: "var(--pc-text-muted)", textDecoration: "none", fontFamily: "'IBM Plex Sans', sans-serif", transition: "color 0.2s" }}
+            {[["Решения", "services"], ["Интеграции", "integrations"], ["Тарифы", "pricing"], ["О платформе", "about"]].map(([label, id]) => (
+              <button key={label} onClick={() => scrollTo(id)} style={{ fontSize: 14, color: "var(--pc-text-muted)", background: "none", border: "none", cursor: "pointer", fontFamily: "'IBM Plex Sans', sans-serif", transition: "color 0.2s", padding: 0 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--pc-accent)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--pc-text-muted)")}
-              >{label}</a>
+              >{label}</button>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="pc-btn-outline hidden md:block" style={{ padding: "9px 22px", fontSize: 13 }}>Войти</button>
-            <button className="pc-btn-primary" style={{ padding: "9px 22px", fontSize: 13 }}>Попробовать бесплатно</button>
+            <button className="pc-btn-outline hidden md:block" style={{ padding: "9px 22px", fontSize: 13 }} onClick={() => openModal("Войти в платформу")}>Войти</button>
+            <button className="pc-btn-primary" style={{ padding: "9px 22px", fontSize: 13 }} onClick={() => openModal("Попробовать бесплатно — 14 дней")}>Попробовать бесплатно</button>
             <button className="md:hidden" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--pc-text-muted)" }} onClick={() => setMobileOpen(!mobileOpen)}>
               <Icon name={mobileOpen ? "X" : "Menu"} size={22} />
             </button>
@@ -144,8 +250,8 @@ export default function Index() {
         </div>
         {mobileOpen && (
           <div style={{ background: "var(--pc-surface)", borderTop: "1px solid var(--pc-border)", padding: "16px 24px" }}>
-            {["Решения", "Интеграции", "Тарифы", "О платформе"].map((item) => (
-              <a key={item} href="#" onClick={() => setMobileOpen(false)} style={{ display: "block", padding: "10px 0", fontSize: 15, color: "var(--pc-text-muted)", textDecoration: "none", borderBottom: "1px solid var(--pc-border)" }}>{item}</a>
+            {[["Решения", "services"], ["Интеграции", "integrations"], ["Тарифы", "pricing"], ["О платформе", "about"]].map(([label, id]) => (
+              <button key={label} onClick={() => { scrollTo(id); setMobileOpen(false); }} style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 0", fontSize: 15, color: "var(--pc-text-muted)", background: "none", border: "none", borderBottom: "1px solid var(--pc-border)", cursor: "pointer" }}>{label}</button>
             ))}
           </div>
         )}
@@ -175,8 +281,8 @@ export default function Index() {
               </p>
 
               <div className="animate-fade-in-up delay-300 flex gap-4 flex-wrap">
-                <button className="pc-btn-primary" style={{ padding: "13px 32px", fontSize: 15 }}>Попробовать 14 дней бесплатно</button>
-                <button className="pc-btn-outline" style={{ padding: "13px 32px", fontSize: 15 }}>Смотреть демо</button>
+                <button className="pc-btn-primary" style={{ padding: "13px 32px", fontSize: 15 }} onClick={() => openModal("Попробовать бесплатно — 14 дней")}>Попробовать 14 дней бесплатно</button>
+                <button className="pc-btn-outline" style={{ padding: "13px 32px", fontSize: 15 }} onClick={() => openModal("Запросить демо платформы")}>Смотреть демо</button>
               </div>
 
               <div className="animate-fade-in-up delay-400 flex gap-8 mt-10 flex-wrap">
@@ -449,7 +555,8 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
-                <button className={plan.highlight ? "pc-btn-primary" : "pc-btn-outline"} style={{ width: "100%", textAlign: "center", background: plan.highlight ? "var(--pc-accent)" : undefined, borderColor: plan.highlight ? undefined : "var(--pc-accent)", color: plan.highlight ? "#fff" : "var(--pc-accent)" }}>
+                <button className={plan.highlight ? "pc-btn-primary" : "pc-btn-outline"} style={{ width: "100%", textAlign: "center", background: plan.highlight ? "var(--pc-accent)" : undefined, borderColor: plan.highlight ? undefined : "var(--pc-accent)", color: plan.highlight ? "#fff" : "var(--pc-accent)" }}
+                  onClick={() => openModal(`Тариф «${plan.name}» — ${plan.cta}`)}>
                   {plan.cta}
                 </button>
               </div>
@@ -486,8 +593,8 @@ export default function Index() {
             14 дней бесплатного доступа. Подключение за 1 день. Полное соответствие ФЗ-152 и GDPR.
           </p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            <button className="pc-btn-primary" style={{ padding: "14px 36px", fontSize: 15, background: "var(--pc-accent)" }}>Начать бесплатно</button>
-            <button className="pc-btn-outline" style={{ padding: "14px 36px", fontSize: 15, borderColor: "var(--pc-accent)", color: "var(--pc-accent)" }}>Запросить демо</button>
+            <button className="pc-btn-primary" style={{ padding: "14px 36px", fontSize: 15, background: "var(--pc-accent)" }} onClick={() => openModal("Начать бесплатно — 14 дней доступа")}>Начать бесплатно</button>
+            <button className="pc-btn-outline" style={{ padding: "14px 36px", fontSize: 15, borderColor: "var(--pc-accent)", color: "var(--pc-accent)" }} onClick={() => openModal("Запросить демо платформы")}>Запросить демо</button>
           </div>
           <div style={{ marginTop: 32, fontSize: 13, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace" }}>
             Автор проекта: Николаев Владимир Владимирович · 2026
@@ -584,8 +691,8 @@ export default function Index() {
                 </div>
 
                 <div style={{ marginTop: 20, display: "flex", gap: 12 }}>
-                  <button className="pc-btn-primary" style={{ flex: 1, textAlign: "center", padding: "12px 0" }}>Обсудить внедрение</button>
-                  <button className="pc-btn-outline" style={{ flex: 1, textAlign: "center", padding: "12px 0" }}>Запросить PDF</button>
+                  <button className="pc-btn-primary" style={{ flex: 1, textAlign: "center", padding: "12px 0" }} onClick={() => openModal("Обсудить внедрение PlanetCare AI")}>Обсудить внедрение</button>
+                  <button className="pc-btn-outline" style={{ flex: 1, textAlign: "center", padding: "12px 0" }} onClick={() => openModal("Запросить PDF-документацию")}>Запросить PDF</button>
                 </div>
               </div>
 
