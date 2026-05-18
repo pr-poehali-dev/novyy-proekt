@@ -495,6 +495,125 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── CONTACTS ── */}
+      <section style={{ padding: "80px 0", borderTop: "1px solid var(--pc-border)" }}>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16 items-start">
+
+            {/* CTA text */}
+            <div>
+              <div style={{ fontSize: 11, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-accent)", letterSpacing: "0.12em", marginBottom: 12 }}>// КОНТАКТЫ</div>
+              <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 700, lineHeight: 1.1, marginBottom: 20 }}>
+                ХОТИТЕ АВТОМАТИЗИРОВАТЬ<br/>
+                <span style={{ color: "var(--pc-accent)" }}>БЕЗОПАСНОСТЬ БИЗНЕСА?</span>
+              </h2>
+              <p style={{ color: "var(--pc-text-muted)", fontSize: 15, lineHeight: 1.75, marginBottom: 32, maxWidth: 480 }}>
+                Свяжитесь с нами для обсуждения деталей внедрения платформы «PlanetCare AI» в вашем бизнесе. Архитектура полностью спроектирована и готова к реализации.
+              </p>
+
+              {/* Audience list */}
+              <div style={{ marginBottom: 32 }}>
+                <div style={{ fontSize: 12, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 14, letterSpacing: "0.08em" }}>КОМУ ПОДОЙДЁТ ПЛАТФОРМА</div>
+                {[
+                  "ИП и МСП, стремящимся снизить затраты на безопасность",
+                  "Компаниям, планирующим международную экспансию",
+                  "Организациям, работающим с госорганами и требующим строгого соблюдения норм",
+                  "Международным организациям с российскими партнёрами",
+                ].map((item) => (
+                  <div key={item} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
+                    <Icon name="ChevronRight" size={14} style={{ color: "var(--pc-accent)", flexShrink: 0, marginTop: 2 }} />
+                    <span style={{ fontSize: 14, color: "var(--pc-text-muted)", lineHeight: 1.5 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Delivery format */}
+              <div style={{ padding: "16px 20px", background: "rgba(37,99,235,0.06)", border: "1px solid rgba(37,99,235,0.18)", borderRadius: 8 }}>
+                <div style={{ fontSize: 12, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 10, letterSpacing: "0.08em" }}>ФОРМАТ ПОСТАВКИ</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {[
+                    { icon: "FileText", text: "PDF-документация 30–40 страниц" },
+                    { icon: "FolderArchive", text: "Архив с исходниками (схемы Visio/Miro, скриншоты, графики)" },
+                    { icon: "Code2", text: "Полный исходный код платформы" },
+                    { icon: "CheckSquare", text: "Чек-листы и инструкции по развёртыванию" },
+                  ].map((f) => (
+                    <div key={f.text} style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                      <Icon name={f.icon} size={14} style={{ color: "var(--pc-accent)", flexShrink: 0 }} />
+                      <span style={{ fontSize: 13, color: "var(--pc-text-muted)" }}>{f.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Contact card */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+              {/* Author card */}
+              <div style={{ background: "var(--pc-surface)", border: "1px solid var(--pc-border)", borderRadius: 12, padding: 28 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24, paddingBottom: 20, borderBottom: "1px solid var(--pc-border)" }}>
+                  <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, rgba(37,99,235,0.3), rgba(29,78,216,0.15))", border: "2px solid rgba(37,99,235,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Icon name="User" size={24} style={{ color: "var(--pc-accent)" }} />
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 17, fontWeight: 700, color: "var(--pc-text)", letterSpacing: "0.03em" }}>Николаев Владимир Владимирович</div>
+                    <div style={{ fontSize: 13, color: "var(--pc-text-muted)", marginTop: 2 }}>Автор проекта · PlanetCare AI</div>
+                    <div style={{ fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-accent)", marginTop: 4 }}>Год запуска: 2026</div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {[
+                    { icon: "Mail", label: "Email", value: "info@planetcare-ai.ru", href: "mailto:info@planetcare-ai.ru" },
+                    { icon: "Phone", label: "Телефон", value: "+7 (XXX) XXX-XX-XX", href: "tel:+7XXXXXXXXXX" },
+                    { icon: "Globe", label: "Сайт", value: "www.planetcare-ai.ru", href: "https://www.planetcare-ai.ru" },
+                  ].map((c) => (
+                    <a key={c.label} href={c.href} style={{ display: "flex", gap: 14, alignItems: "center", padding: "12px 14px", background: "var(--pc-bg)", border: "1px solid var(--pc-border)", borderRadius: 8, textDecoration: "none", transition: "border-color 0.2s" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(37,99,235,0.35)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--pc-border)")}>
+                      <div style={{ width: 34, height: 34, borderRadius: 6, background: "rgba(37,99,235,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Icon name={c.icon} size={16} style={{ color: "var(--pc-accent)" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 11, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 2 }}>{c.label}</div>
+                        <div style={{ fontSize: 14, color: "var(--pc-text)", fontWeight: 500 }}>{c.value}</div>
+                      </div>
+                      <Icon name="ArrowUpRight" size={14} style={{ color: "var(--pc-text-dim)", marginLeft: "auto" }} />
+                    </a>
+                  ))}
+                </div>
+
+                <div style={{ marginTop: 20, display: "flex", gap: 12 }}>
+                  <button className="pc-btn-primary" style={{ flex: 1, textAlign: "center", padding: "12px 0" }}>Обсудить внедрение</button>
+                  <button className="pc-btn-outline" style={{ flex: 1, textAlign: "center", padding: "12px 0" }}>Запросить PDF</button>
+                </div>
+              </div>
+
+              {/* Readiness badge */}
+              <div style={{ background: "rgba(0,200,100,0.05)", border: "1px solid rgba(0,200,100,0.2)", borderRadius: 10, padding: "18px 22px", display: "flex", gap: 14, alignItems: "flex-start" }}>
+                <div style={{ width: 38, height: 38, borderRadius: 8, background: "rgba(0,200,100,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Icon name="PackageCheck" size={20} style={{ color: "#00c864" }} />
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 700, color: "#00c864", letterSpacing: "0.06em", marginBottom: 6 }}>АРХИТЕКТУРА ГОТОВА К РЕАЛИЗАЦИИ</div>
+                  <div style={{ fontSize: 13, color: "var(--pc-text-muted)", lineHeight: 1.6 }}>Все компоненты спроектированы: микросервисы, безопасность, интеграции с госорганами, локальные ИИ-модели, мониторинг и документация.</div>
+                </div>
+              </div>
+
+              {/* Tech stack */}
+              <div style={{ background: "var(--pc-surface)", border: "1px solid var(--pc-border)", borderRadius: 10, padding: "18px 20px" }}>
+                <div style={{ fontSize: 11, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 12, letterSpacing: "0.08em" }}>ТЕХНОЛОГИЧЕСКИЙ СТЕК</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                  {["React", "Node.js", "Python", "PostgreSQL", "MongoDB", "Redis", "Docker", "Kubernetes", "AWS / Yandex Cloud", "Prometheus", "ELK Stack", "OAuth 2.0"].map((tech) => (
+                    <span key={tech} style={{ padding: "4px 10px", background: "var(--pc-bg)", border: "1px solid var(--pc-border)", borderRadius: 4, fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-text-muted)" }}>{tech}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── FOOTER ── */}
       <footer style={{ borderTop: "1px solid var(--pc-border)", padding: "32px 0", background: "var(--pc-bg)" }}>
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -506,15 +625,16 @@ export default function Index() {
               PLANET<span style={{ color: "var(--pc-accent)" }}>CARE</span> AI
             </span>
           </div>
-          <div style={{ display: "flex", gap: 24 }}>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
             {["Документация", "API", "Политика конфиденциальности", "Поддержка"].map((item) => (
               <a key={item} href="#" style={{ fontSize: 12, color: "var(--pc-text-dim)", textDecoration: "none", fontFamily: "'IBM Plex Mono', monospace", transition: "color 0.2s" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--pc-accent)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--pc-text-dim)")}>{item}</a>
             ))}
           </div>
-          <div style={{ fontSize: 12, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace" }}>
-            © 2026 PlanetCare AI · Николаев В.В.
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
+            <div style={{ fontSize: 12, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace" }}>© 2026 PlanetCare AI</div>
+            <div style={{ fontSize: 11, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace" }}>Николаев Владимир Владимирович</div>
           </div>
         </div>
       </footer>
