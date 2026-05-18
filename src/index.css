@@ -34,17 +34,19 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* PlanetCare custom */
-    --pc-bg: #080d12;
-    --pc-surface: #0e1820;
-    --pc-surface-2: #13202e;
-    --pc-border: #1e2f40;
-    --pc-green: #00ff88;
-    --pc-green-dim: #00cc6a;
-    --pc-blue: #00aaff;
-    --pc-amber: #ffaa00;
-    --pc-red: #ff4455;
-    --pc-text: #e8f0f8;
-    --pc-text-muted: #6b8299;
+    --pc-bg: #050a14;
+    --pc-surface: #0a1120;
+    --pc-surface-2: #0f1a2e;
+    --pc-border: #1a2840;
+    --pc-accent: #2563eb;
+    --pc-accent-2: #1d4ed8;
+    --pc-accent-light: #3b82f6;
+    --pc-green: #00c864;
+    --pc-blue: #0ea5e9;
+    --pc-amber: #f59e0b;
+    --pc-red: #ef4444;
+    --pc-text: #e2eaf6;
+    --pc-text-muted: #64789a;
     --pc-text-dim: #3d5570;
   }
 
@@ -294,8 +296,8 @@
 
 /* ── Btn ── */
 .pc-btn-primary {
-  background: var(--pc-green);
-  color: #080d12;
+  background: var(--pc-accent);
+  color: #ffffff;
   font-family: "Oswald", sans-serif;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -311,21 +313,21 @@
     box-shadow 0.2s;
 }
 .pc-btn-primary:hover {
-  background: #00ffaa;
+  background: var(--pc-accent-2);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
 }
 
 .pc-btn-outline {
   background: transparent;
-  color: var(--pc-green);
+  color: var(--pc-accent);
   font-family: "Oswald", sans-serif;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 11px 28px;
   border-radius: 4px;
-  border: 1px solid var(--pc-green);
+  border: 1px solid var(--pc-accent);
   cursor: pointer;
   font-size: 14px;
   transition:
@@ -333,7 +335,7 @@
     transform 0.15s;
 }
 .pc-btn-outline:hover {
-  background: rgba(0, 255, 136, 0.08);
+  background: rgba(37, 99, 235, 0.1);
   transform: translateY(-1px);
 }
 
