@@ -676,6 +676,130 @@ curl http://localhost:8080/health`,
         </div>
       </section>
 
+      {/* ── CHECKLIST ── */}
+      <section style={{ padding: "80px 0", borderTop: "1px solid var(--pc-border)" }}>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16">
+
+            {/* Checklist */}
+            <div>
+              <div style={{ fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-green)", letterSpacing: "0.1em", marginBottom: 12 }}>// POST_DEPLOY_CHECKLIST</div>
+              <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 700, lineHeight: 1.1, marginBottom: 24 }}>
+                ЧЕК-ЛИСТ<br/><span style={{ color: "var(--pc-green)" }}>ГОТОВНОСТИ</span>
+              </h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {[
+                  { label: "Админ-панель доступна по HTTPS", ok: true },
+                  { label: "Аутентификация администратора работает", ok: true },
+                  { label: "Загрузка и скачивание файлов корректны", ok: true },
+                  { label: "Облачные ИИ-сервисы (Яндекс, Google) отвечают", ok: true },
+                  { label: "Локальные модели Llama 3 и Dalan доступны", ok: true },
+                  { label: "Grafana показывает CPU/RAM/диск/GPU", ok: true },
+                  { label: "ELK Stack пишет логи всех сервисов", ok: true },
+                  { label: "Ежедневные бэкапы создаются в /backups/", ok: true },
+                  { label: "SSL-сертификат активен, HTTPS работает", ok: true },
+                  { label: "Фаервол: открыты только порты 80, 443, 22", ok: true },
+                  { label: "Нагрузка 50+ пользователей — система стабильна", ok: true },
+                  { label: "Telegram-алерт при критических событиях", ok: true },
+                ].map((item, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "var(--pc-surface)", border: "1px solid var(--pc-border)", borderRadius: 6 }}>
+                    <div style={{ width: 20, height: 20, borderRadius: 4, background: item.ok ? "rgba(0,255,136,0.15)" : "rgba(255,68,85,0.15)", border: `1px solid ${item.ok ? "rgba(0,255,136,0.4)" : "rgba(255,68,85,0.4)"}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Icon name={item.ok ? "Check" : "X"} size={11} style={{ color: item.ok ? "var(--pc-green)" : "var(--pc-red)" }} />
+                    </div>
+                    <span style={{ fontSize: 13, color: "var(--pc-text-muted)" }}>{item.label}</span>
+                    <span style={{ marginLeft: "auto", fontSize: 11, fontFamily: "'IBM Plex Mono', monospace", color: item.ok ? "var(--pc-green)" : "var(--pc-red)", flexShrink: 0 }}>{item.ok ? "OK" : "FAIL"}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+
+              {/* Recovery Scenarios */}
+              <div>
+                <div style={{ fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-amber)", letterSpacing: "0.1em", marginBottom: 12 }}>// DISASTER_RECOVERY</div>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, marginBottom: 16, color: "var(--pc-text)" }}>
+                  АВАРИЙНОЕ <span style={{ color: "var(--pc-amber)" }}>ВОССТАНОВЛЕНИЕ</span>
+                </h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {[
+                    {
+                      icon: "Database",
+                      title: "Сбой БД PostgreSQL",
+                      color: "var(--pc-blue)",
+                      steps: ["docker compose down", "psql planetcare < /backups/db/planetcare_$(date +%Y%m%d).sql", "docker compose up -d"],
+                    },
+                    {
+                      icon: "HardDrive",
+                      title: "Потеря данных хранилища",
+                      color: "var(--pc-amber)",
+                      steps: ["rm -rf /opt/planetcare/data/*", "rsync -av /backups/storage/ /opt/planetcare/data/", "docker restart minio"],
+                    },
+                    {
+                      icon: "Brain",
+                      title: "Сбой ИИ-модели",
+                      color: "var(--pc-green)",
+                      steps: ["bash deploy_local_model.sh llama3", "curl http://localhost:8000/v1/models"],
+                    },
+                  ].map((scenario) => (
+                    <div key={scenario.title} className="pc-card" style={{ padding: 14 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                        <Icon name={scenario.icon} size={14} style={{ color: scenario.color }} />
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "var(--pc-text)" }}>{scenario.title}</span>
+                      </div>
+                      {scenario.steps.map((cmd, j) => (
+                        <div key={j} style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+                          <span style={{ fontSize: 11, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace", flexShrink: 0 }}>{j + 1}.</span>
+                          <span style={{ fontSize: 11, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-green)" }}>{cmd}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contacts */}
+              <div>
+                <div style={{ fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-text-dim)", letterSpacing: "0.1em", marginBottom: 12 }}>// SUPPORT_CONTACTS</div>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, marginBottom: 16, color: "var(--pc-text)" }}>
+                  КОНТАКТЫ <span style={{ color: "var(--pc-green)" }}>ПОДДЕРЖКИ</span>
+                </h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {[
+                    { icon: "Mail", label: "Email", value: "support@planetcare.ai", sub: "Будни 9:00–18:00 МСК" },
+                    { icon: "MessageCircle", label: "Telegram-бот", value: "@PlanetCareSupportBot", sub: "Автоответ + чат с инженером" },
+                    { icon: "Ticket", label: "Тикет-система", value: "planetcare-admin.com/tickets", sub: "История обращений" },
+                    { icon: "Phone", label: "Экстренная линия 24/7", value: "+7 (XXX) XXX-XX-XX", sub: "Только критические инциденты" },
+                  ].map((c) => (
+                    <div key={c.label} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12px 14px", background: "var(--pc-surface)", border: "1px solid var(--pc-border)", borderRadius: 6 }}>
+                      <div style={{ width: 30, height: 30, borderRadius: 6, background: "rgba(0,255,136,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Icon name={c.icon} size={14} style={{ color: "var(--pc-green)" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 12, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 2 }}>{c.label}</div>
+                        <div style={{ fontSize: 14, color: "var(--pc-text)", fontWeight: 500 }}>{c.value}</div>
+                        <div style={{ fontSize: 12, color: "var(--pc-text-muted)", marginTop: 2 }}>{c.sub}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Status badge */}
+              <div style={{ background: "rgba(0,255,136,0.06)", border: "1px solid rgba(0,255,136,0.2)", borderRadius: 8, padding: "16px 20px", display: "flex", alignItems: "flex-start", gap: 14 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 6, background: "rgba(0,255,136,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Icon name="PackageCheck" size={18} style={{ color: "var(--pc-green)" }} />
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 700, color: "var(--pc-green)", letterSpacing: "0.06em", marginBottom: 4 }}>ПАКЕТ v1.0 — ГОТОВ К РАЗВЁРТЫВАНИЮ</div>
+                  <div style={{ fontSize: 13, color: "var(--pc-text-muted)", lineHeight: 1.6 }}>Мульти-ИИ оркестратор · Полная админ-панель · Локальные модели · Мониторинг · Автобэкапы · Документация</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section style={{ padding: "100px 0", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(0,255,136,0.06) 0%, transparent 70%)", pointerEvents: "none" }}/>
