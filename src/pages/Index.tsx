@@ -68,6 +68,39 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   );
 }
 
+// ── Deploy Step ───────────────────────────────────────
+function DeployStep({ step, title, desc, code, index }: { step: string; title: string; desc: string; code: string; index: number }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s`, animationFillMode: "both", background: "var(--pc-bg)", border: `1px solid ${open ? "rgba(0,255,136,0.3)" : "var(--pc-border)"}`, borderRadius: 8, overflow: "hidden", transition: "border-color 0.2s" }}>
+      <button onClick={() => setOpen(!open)} style={{ width: "100%", padding: "18px 20px", display: "flex", alignItems: "center", gap: 16, background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
+        <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: "rgba(0,255,136,0.25)", lineHeight: 1, flexShrink: 0, minWidth: 40 }}>{step}</span>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 17, fontWeight: 600, letterSpacing: "0.04em", color: "var(--pc-text)", marginBottom: 3 }}>{title}</div>
+          <div style={{ fontSize: 13, color: "var(--pc-text-muted)" }}>{desc}</div>
+        </div>
+        <Icon name={open ? "ChevronUp" : "ChevronDown"} size={18} style={{ color: "var(--pc-text-muted)", flexShrink: 0 }} />
+      </button>
+      {open && (
+        <div style={{ borderTop: "1px solid var(--pc-border)", background: "#050a0e", padding: "16px 20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+            <span className="status-dot" style={{ background: "var(--pc-red)" }}/>
+            <span className="status-dot" style={{ background: "var(--pc-amber)" }}/>
+            <span className="status-dot" style={{ background: "var(--pc-green)" }}/>
+            <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--pc-text-dim)", marginLeft: 6 }}>bash</span>
+          </div>
+          <pre style={{ margin: 0, fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, color: "var(--pc-green)", lineHeight: 1.8, whiteSpace: "pre-wrap", overflowX: "auto" }}>{code.split("\n").map((line, i) => (
+            <span key={i} style={{ display: "block" }}>
+              <span style={{ color: "var(--pc-text-dim)", userSelect: "none" }}>$ </span>
+              <span style={{ color: line.startsWith("#") ? "var(--pc-text-dim)" : "var(--pc-green)" }}>{line}</span>
+            </span>
+          ))}</pre>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main Page ──────────────────────────────────────────
 export default function Index() {
   const [activeTab, setActiveTab] = useState<"overview" | "ai" | "storage" | "logs">("overview");
@@ -571,6 +604,74 @@ export default function Index() {
                 <button className="pc-btn-primary" style={{ padding: "6px 16px", fontSize: 12 }}>Запросить пакет</button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── DEPLOY STEPS ── */}
+      <section style={{ padding: "80px 0", background: "var(--pc-surface)", borderTop: "1px solid var(--pc-border)" }}>
+        <div className="max-w-7xl mx-auto px-6">
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-green)", letterSpacing: "0.12em", marginBottom: 12 }}>// DEPLOYMENT_GUIDE</div>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 700, lineHeight: 1.1 }}>
+              РАЗВЁРТЫВАНИЕ ЗА <span style={{ color: "var(--pc-green)" }}>5 ШАГОВ</span>
+            </h2>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 860, margin: "0 auto" }}>
+            {[
+              {
+                step: "01",
+                title: "Подготовка сервера",
+                desc: "Установка базовых зависимостей, Docker и Docker Compose",
+                code: `sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl wget git rsync cron
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+sudo apt install docker-compose-plugin -y`,
+              },
+              {
+                step: "02",
+                title: "Развёртывание платформы",
+                desc: "Распаковка архива и запуск всех сервисов одной командой",
+                code: `unzip planetcare-ai-package-v1.0.zip -d /opt/planetcare
+cd /opt/planetcare
+docker compose up -d
+docker compose ps`,
+              },
+              {
+                step: "03",
+                title: "Настройка SSL",
+                desc: "Получение Let's Encrypt сертификата и настройка Nginx",
+                code: `sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d planetcare-admin.com`,
+              },
+              {
+                step: "04",
+                title: "Инициализация БД и хранилища",
+                desc: "Применение схемы PostgreSQL и создание MinIO бакетов",
+                code: `psql -f configs/postgresql/planetcare-schema.sql
+mc alias set planetcare http://localhost:9000 minioadmin minioadmin
+mc mb planetcare/users`,
+              },
+              {
+                step: "05",
+                title: "Развёртывание ИИ-моделей",
+                desc: "Запуск локальных моделей Llama 3 и Dalan на вашем оборудовании",
+                code: `bash code/scripts/setup/deploy_local_model.sh llama3
+bash code/scripts/setup/deploy_local_model.sh dalan
+curl http://localhost:8080/health`,
+              },
+            ].map((s, i) => (
+              <DeployStep key={s.step} {...s} index={i} />
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <p style={{ color: "var(--pc-text-muted)", fontSize: 14, marginBottom: 20 }}>
+              Полный чек-лист готовности и руководство администратора — в пакете поставки
+            </p>
+            <button className="pc-btn-outline">Скачать deployment-checklist.md</button>
           </div>
         </div>
       </section>
