@@ -485,6 +485,96 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── PACKAGE ── */}
+      <section style={{ padding: "80px 0", borderTop: "1px solid var(--pc-border)" }}>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16 items-start">
+            <div>
+              <div style={{ fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-green)", letterSpacing: "0.1em", marginBottom: 12 }}>// DELIVERY_PACKAGE</div>
+              <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 700, lineHeight: 1.1, marginBottom: 20 }}>
+                ЧТО ВХОДИТ<br/><span style={{ color: "var(--pc-green)" }}>В ПАКЕТ ПОСТАВКИ</span>
+              </h2>
+              <p style={{ color: "var(--pc-text-muted)", fontSize: 15, lineHeight: 1.7, marginBottom: 32 }}>
+                ZIP-архив <span style={{ fontFamily: "'IBM Plex Mono', monospace", color: "var(--pc-green)", fontSize: 13 }}>planetcare-ai-package-v1.0.zip</span> содержит всё необходимое для развёртывания с нуля: код, конфиги, документацию, скрипты и тесты.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {[
+                  { icon: "BookOpen", label: "Документация", desc: "Архитектурные схемы Mermaid, OpenAPI 3.0 спецификация, руководства администратора и пользователя, FAQ" },
+                  { icon: "Code2", label: "Исходный код", desc: "Фронтенд (React), бэкенд (Node.js + Python), API Gateway, Auth Service, Storage Service, AI Orchestrator" },
+                  { icon: "Settings", label: "Конфигурации", desc: "docker-compose.yml, Nginx, PostgreSQL схема, MinIO политики, шаблоны Dockerfile" },
+                  { icon: "FlaskConical", label: "Тесты", desc: "Unit, Integration и нагрузочные тесты (JMeter). Сценарии для 50+ одновременных пользователей" },
+                  { icon: "Terminal", label: "Скрипты", desc: "init_system.sh, deploy_local_model.sh, backup_system.sh, restore_system.sh, setup_ssl.sh" },
+                  { icon: "CalendarDays", label: "План внедрения", desc: "График развёртывания, управление рисками, обучающие материалы для администраторов и пользователей" },
+                ].map((item) => (
+                  <div key={item.label} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "14px 16px", background: "var(--pc-surface)", border: "1px solid var(--pc-border)", borderRadius: 8, transition: "border-color 0.2s" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(0,255,136,0.25)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--pc-border)")}>
+                    <div style={{ width: 32, height: 32, borderRadius: 6, background: "rgba(0,255,136,0.08)", border: "1px solid rgba(0,255,136,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Icon name={item.icon} size={15} style={{ color: "var(--pc-green)" }} />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 14, color: "var(--pc-text)", marginBottom: 3 }}>{item.label}</div>
+                      <div style={{ fontSize: 13, color: "var(--pc-text-muted)", lineHeight: 1.55 }}>{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* File tree */}
+            <div className="pc-card" style={{ padding: 0, overflow: "hidden" }}>
+              <div style={{ background: "var(--pc-surface-2)", padding: "12px 16px", borderBottom: "1px solid var(--pc-border)", display: "flex", alignItems: "center", gap: 8 }}>
+                <Icon name="FolderArchive" size={14} style={{ color: "var(--pc-green)" }} />
+                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: "var(--pc-text-muted)" }}>planetcare-ai-package-v1.0.zip</span>
+              </div>
+              <div style={{ padding: "16px 20px", fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, lineHeight: 1.9, overflowX: "auto" }}>
+                {[
+                  { indent: 0, icon: "Folder", name: "docs/", color: "var(--pc-amber)" },
+                  { indent: 1, icon: "Folder", name: "architecture/", color: "var(--pc-amber)" },
+                  { indent: 2, icon: "FileText", name: "system-architecture.mmd", color: "var(--pc-text-muted)" },
+                  { indent: 2, icon: "FileText", name: "ai-integration.mmd", color: "var(--pc-text-muted)" },
+                  { indent: 1, icon: "Folder", name: "api-docs/", color: "var(--pc-amber)" },
+                  { indent: 2, icon: "FileText", name: "openapi-spec.yaml", color: "var(--pc-green)" },
+                  { indent: 2, icon: "FileText", name: "postman-collection.json", color: "var(--pc-green)" },
+                  { indent: 1, icon: "Folder", name: "user-guides/", color: "var(--pc-amber)" },
+                  { indent: 2, icon: "FileText", name: "admin-guide.pdf", color: "var(--pc-text-muted)" },
+                  { indent: 2, icon: "FileText", name: "user-guide.pdf", color: "var(--pc-text-muted)" },
+                  { indent: 0, icon: "Folder", name: "code/", color: "var(--pc-blue)" },
+                  { indent: 1, icon: "Folder", name: "frontend/", color: "var(--pc-blue)" },
+                  { indent: 2, icon: "Folder", name: "admin-panel/", color: "var(--pc-blue)" },
+                  { indent: 2, icon: "Folder", name: "user-interface/", color: "var(--pc-blue)" },
+                  { indent: 1, icon: "Folder", name: "backend/", color: "var(--pc-blue)" },
+                  { indent: 2, icon: "Folder", name: "ai-orchestrator/", color: "var(--pc-blue)" },
+                  { indent: 2, icon: "Folder", name: "auth-service/", color: "var(--pc-blue)" },
+                  { indent: 1, icon: "Folder", name: "scripts/", color: "var(--pc-blue)" },
+                  { indent: 2, icon: "FileCode", name: "init_system.sh", color: "var(--pc-green)" },
+                  { indent: 2, icon: "FileCode", name: "backup_system.sh", color: "var(--pc-green)" },
+                  { indent: 0, icon: "Folder", name: "configs/", color: "#aa88ff" },
+                  { indent: 1, icon: "FileCode", name: "docker-compose.yml", color: "var(--pc-green)" },
+                  { indent: 1, icon: "Folder", name: "nginx/", color: "#aa88ff" },
+                  { indent: 1, icon: "Folder", name: "postgresql/", color: "#aa88ff" },
+                  { indent: 0, icon: "Folder", name: "tests/", color: "var(--pc-amber)" },
+                  { indent: 1, icon: "FileCode", name: "ai-integration-tests.py", color: "var(--pc-text-muted)" },
+                  { indent: 1, icon: "FileCode", name: "load-test-50users.jmx", color: "var(--pc-text-muted)" },
+                  { indent: 0, icon: "Folder", name: "deployment-plan/", color: "var(--pc-red)" },
+                  { indent: 1, icon: "FileText", name: "implementation-timeline.xlsx", color: "var(--pc-text-muted)" },
+                  { indent: 1, icon: "FileText", name: "risk-management.md", color: "var(--pc-text-muted)" },
+                ].map((row, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, paddingLeft: row.indent * 18 }}>
+                    <Icon name={row.icon} size={12} style={{ color: row.color, flexShrink: 0 }} />
+                    <span style={{ color: row.icon === "Folder" ? row.color : "var(--pc-text-muted)" }}>{row.name}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ borderTop: "1px solid var(--pc-border)", padding: "12px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ fontSize: 12, color: "var(--pc-text-dim)", fontFamily: "'IBM Plex Mono', monospace" }}>30 файлов · ~450 МБ</span>
+                <button className="pc-btn-primary" style={{ padding: "6px 16px", fontSize: 12 }}>Запросить пакет</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section style={{ padding: "100px 0", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(0,255,136,0.06) 0%, transparent 70%)", pointerEvents: "none" }}/>
